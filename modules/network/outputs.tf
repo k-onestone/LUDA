@@ -37,3 +37,8 @@ output "router_interface_port_id" {
   value       = openstack_networking_router_interface_v2.security_if.port_id
   description = "Port ID of router's interface on security subnet"
 }
+
+output "vpn_net_id" {
+  value       = openstack_networking_network_v2.vpn.id
+  description = "VPN 전용 네트워크 ID"
+}
