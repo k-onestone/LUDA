@@ -36,4 +36,6 @@ vpn_fixed_ip_security    = "10.10.10.100"
 ids_fixed_ip             = "10.10.10.10"
 ips_fixed_ip             = "10.10.10.11"
 waf_fixed_ip             = "10.10.10.12"
+vpn_subnet_cidr = "172.16.0.0/24"
 vpn_fixed_ip_vpn = "172.16.0.100"
+

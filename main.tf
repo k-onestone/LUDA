@@ -29,6 +29,7 @@ module "network" {
   zone1_subnet_cidr      = var.zone1_subnet_cidr
   shared_subnet_cidr     = var.shared_subnet_cidr
   security_subnet_cidr   = var.security_subnet_cidr
+  vpn_subnet_cidr = var.vpn_subnet_cidr
 }
 
 module "secgroup" {

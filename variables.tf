@@ -157,3 +157,8 @@ variable "vpn_fixed_ip_vpn" {
   description = "VPN 인스턴스의 vpn-net 인터페이스 고정 IP"
   type        = string
 }
+
+variable "vpn_subnet_cidr" {
+  description = "VPN 전용 네트워크의 CIDR"
+  type        = string
+}
