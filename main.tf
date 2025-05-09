@@ -65,7 +65,7 @@ module "bastion1" {
   public_key_path     = var.public_key_path
   secgroup            = module.secgroup.bastion_sg_id
   network_id_zone1    = module.network.zone1_net_id
-  floating_network_id = "67249f5a-5ec8-489a-82ff-e99aa0bb292c"
+  floating_pool_name    = "public"
   bastion_subnet_cidr = var.bastion_zone1_subnet_cidr
   fixed_ip            = var.bastion_zone1_ip
 }

@@ -20,7 +20,7 @@ resource "openstack_compute_instance_v2" "bastion" {
 }
 
 resource "openstack_networking_floatingip_v2" "bastion_fip" {
-  pool = var.floating_network_id
+  pool = var.floating_pool_name
 }
 
 resource "openstack_compute_floatingip_associate_v2" "bastion_assoc" {

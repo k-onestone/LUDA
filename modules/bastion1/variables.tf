@@ -34,8 +34,8 @@ variable "network_id_zone1" {
   type        = string
 }
 
-variable "floating_network_id" {
-  description = "Floating IP를 할당할 외부 네트워크 ID"
+variable "floating_pool_name" {
+  description = "Floating IP를 할당할 외부 네트워크 이름"
   type        = string
 }
 
