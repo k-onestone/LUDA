@@ -36,12 +36,6 @@ module "secgroup" {
   providers = { openstack = openstack }
 }
 
-module "fwaas" {
-  source = "./modules/fwaas"
-  providers = { openstack = openstack }
-  router_interface_port_id = module.network.router_interface_port_id
-}
-
 module "vpn" {
   source    = "./modules/vpn"
   providers = { openstack = openstack }
@@ -54,7 +48,7 @@ module "vpn" {
   shared_network_id     = module.network.shared_network_id
   vpn_fixed_ip_security = var.vpn_fixed_ip_security
   vpn_fixed_ip_shared   = var.vpn_fixed_ip_shared
-  floating_pool_name    = var.floating_network_name
+  floating_pool_name    = "public"
 }
 
 module "bastion1" {
@@ -68,7 +62,7 @@ module "bastion1" {
   public_key_path     = var.public_key_path
   secgroup            = module.secgroup.bastion_sg_id
   network_id_zone1    = module.network.zone1_net_id
-  floating_network_id = var.floating_network_id
+  floating_network_id = "67249f5a-5ec8-489a-82ff-e99aa0bb292c"
   bastion_subnet_cidr = var.bastion_zone1_subnet_cidr
   fixed_ip            = var.bastion_zone1_ip
 }
