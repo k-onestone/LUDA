@@ -43,8 +43,7 @@ resource "openstack_fw_policy_v2" "web_policy" {
 
 # 5. Firewall Group (라우터 인터페이스 포트에 적용)
 resource "openstack_fw_group_v2" "main_fw_group" {
-  name               = "main-fw-group"
-  ingress_policy_id  = openstack_fw_policy_v2.web_policy.id
-  egress_policy_id   = openstack_fw_policy_v2.web_policy.id
-  ports              = [var.router_interface_port_id]
+  name                = "main-fw-group"
+  firewall_policy_id  = openstack_fw_policy_v2.web_policy.id
+  ports               = [var.router_interface_port_id]
 }
