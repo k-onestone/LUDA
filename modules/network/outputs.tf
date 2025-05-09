@@ -1,5 +1,5 @@
 output "public_net_id" {
-  value       = openstack_networking_network_v2.public.id
+  value       = data.openstack_networking_network_v2.public.id
   description = "ID of the external public network"
 }
 
@@ -31,4 +31,9 @@ output "shared_network_id" {
 output "shared_subnet_id" {
   value       = openstack_networking_subnet_v2.shared.id
   description = "ID of the shared subnet"
+}
+
+output "router_interface_port_id" {
+  value       = openstack_networking_router_interface_v2.security_if.port_id
+  description = "Port ID of router's interface on security subnet"
 }

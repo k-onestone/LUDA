@@ -6,19 +6,15 @@ terraform {
   }
 }
 
-# 1. 외부 네트워크 (public)
-resource "openstack_networking_network_v2" "public" {
-  name           = "public-net"
-  admin_state_up = true
-  external       = true
-  shared         = true
-  provider_physical_network = "external"
-  provider_network_type     = "flat"
+# ✅ 외부 public 네트워크는 기존 리소스를 data로 참조
+data "openstack_networking_network_v2" "public" {
+  name = "public"
 }
 
+# 외부 subnet 정의만 새로 생성
 resource "openstack_networking_subnet_v2" "public" {
   name            = "public-subnet"
-  network_id      = openstack_networking_network_v2.public.id
+  network_id      = data.openstack_networking_network_v2.public.id
   cidr            = var.public_subnet_cidr
   ip_version      = 4
   gateway_ip      = var.public_gateway
@@ -31,7 +27,7 @@ resource "openstack_networking_subnet_v2" "public" {
   enable_dhcp = false
 }
 
-# 2. 보안 장비 네트워크 (security-net)
+# 보안 장비 네트워크 (security-net)
 resource "openstack_networking_network_v2" "security" {
   name           = "security-net"
   admin_state_up = true
@@ -44,7 +40,7 @@ resource "openstack_networking_subnet_v2" "security" {
   ip_version = 4
 }
 
-# 3. 앱 서버 네트워크 (zone1-net)
+# 앱 서버 네트워크 (zone1-net)
 resource "openstack_networking_network_v2" "zone1" {
   name           = "zone1-net"
   admin_state_up = true
@@ -57,7 +53,7 @@ resource "openstack_networking_subnet_v2" "zone1" {
   ip_version = 4
 }
 
-# 4. 관리자용 내부망 (shared-net)
+# 관리자용 내부망 (shared-net)
 resource "openstack_networking_network_v2" "shared" {
   name           = "shared-net"
   admin_state_up = true
@@ -71,11 +67,11 @@ resource "openstack_networking_subnet_v2" "shared" {
   ip_version = 4
 }
 
-# 5. 라우터 (security-net만 연결)
+# 라우터 (security-net만 연결)
 resource "openstack_networking_router_v2" "main" {
   name                = "main-router"
   admin_state_up      = true
-  external_network_id = openstack_networking_network_v2.public.id
+  external_network_id = data.openstack_networking_network_v2.public.id
 }
 
 resource "openstack_networking_router_interface_v2" "security_if" {
