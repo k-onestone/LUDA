@@ -42,3 +42,14 @@ variable "floating_pool_name" {
   description = "VPN 인스턴스에 할당할 Floating IP 풀 이름"
   type        = string
 }
+
+variable "vpn_network_id" {
+  description = "VPN 전용 네트워크 ID"
+  type        = string
+}
+
+variable "vpn_fixed_ip_vpn" {
+  description = "VPN 인스턴스의 vpn-net 고정 IP"
+  type        = string
+}
+

@@ -46,6 +46,8 @@ module "vpn" {
   secgroup              = module.secgroup.vpn_secgroup_id
   security_network_id   = module.network.security_net_id
   shared_network_id     = module.network.shared_network_id
+  vpn_network_id        = module.network.vpn_net_id
+  vpn_fixed_ip_vpn      = var.vpn_fixed_ip_vpn
   vpn_fixed_ip_security = var.vpn_fixed_ip_security
   vpn_fixed_ip_shared   = var.vpn_fixed_ip_shared
   floating_pool_name    = "public"

@@ -14,13 +14,13 @@ resource "openstack_compute_instance_v2" "vpn" {
   security_groups = [var.secgroup]
 
   network {
-    uuid        = var.shared_network_id
-    fixed_ip_v4 = var.vpn_fixed_ip_shared
+    uuid        = var.vpn_network_id
+    fixed_ip_v4 = var.vpn_fixed_ip_vpn
   }
 
   network {
-    uuid        = var.security_network_id
-    fixed_ip_v4 = var.vpn_fixed_ip_security
+    uuid        = var.shared_network_id
+    fixed_ip_v4 = var.vpn_fixed_ip_shared
   }
 }
 

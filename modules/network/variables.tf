@@ -32,3 +32,8 @@ variable "shared_subnet_cidr" {
   description = "CIDR for shared subnet"
   type        = string
 }
+
+variable "vpn_subnet_cidr" {
+  description = "VPN 전용 네트워크 CIDR"
+  type        = string
+}

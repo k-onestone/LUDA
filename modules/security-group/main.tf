@@ -121,7 +121,7 @@ resource "openstack_networking_secgroup_rule_v2" "elk_allow_ssh" {
 resource "openstack_networking_secgroup_rule_v2" "elk_allow_egress" {
   direction         = "egress"
   ethertype         = "IPv4"
-  protocol          = "any"
+  protocol          = null
   security_group_id = openstack_networking_secgroup_v2.elk_sg.id
 }
 

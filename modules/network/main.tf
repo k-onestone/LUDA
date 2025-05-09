@@ -11,22 +11,6 @@ data "openstack_networking_network_v2" "public" {
   name = "public"
 }
 
-# 외부 subnet 정의만 새로 생성
-resource "openstack_networking_subnet_v2" "public" {
-  name            = "public-subnet"
-  network_id      = data.openstack_networking_network_v2.public.id
-  cidr            = var.public_subnet_cidr
-  ip_version      = 4
-  gateway_ip      = var.public_gateway
-
-  allocation_pool {
-    start = var.public_pool_start
-    end   = var.public_pool_end
-  }
-
-  enable_dhcp = false
-}
-
 # 보안 장비 네트워크 (security-net)
 resource "openstack_networking_network_v2" "security" {
   name           = "security-net"
@@ -77,4 +61,22 @@ resource "openstack_networking_router_v2" "main" {
 resource "openstack_networking_router_interface_v2" "security_if" {
   router_id = openstack_networking_router_v2.main.id
   subnet_id = openstack_networking_subnet_v2.security.id
+}
+
+# VPN 전용 네트워크
+resource "openstack_networking_network_v2" "vpn" {
+  name           = "vpn-net"
+  admin_state_up = true
+}
+
+resource "openstack_networking_subnet_v2" "vpn" {
+  name       = "vpn-subnet"
+  network_id = openstack_networking_network_v2.vpn.id
+  cidr       = var.vpn_subnet_cidr
+  ip_version = 4
+}
+
+resource "openstack_networking_router_interface_v2" "vpn_if" {
+  router_id = openstack_networking_router_v2.main.id
+  subnet_id = openstack_networking_subnet_v2.vpn.id
 }
