@@ -57,18 +57,19 @@ module "vpn" {
 module "bastion1" {
   source    = "./modules/bastion1"
   providers = { openstack = openstack }
-
-  name                = "bastion1"
-  image_name          = var.image_name
-  flavor_name         = var.flavor_name_small
-  key_pair            = var.key_pair
-  public_key_path     = var.public_key_path
-  secgroup            = module.secgroup.bastion_sg_id
-  network_id_zone1    = module.network.zone1_net_id
-  floating_pool_name    = "public"
-  bastion_subnet_cidr = var.bastion_zone1_subnet_cidr
-  fixed_ip            = var.bastion_zone1_ip
+  name                 = "bastion1"
+  image_name           = var.image_name
+  flavor_name          = var.flavor_name_small
+  key_pair             = var.key_pair
+  public_key_path      = var.public_key_path
+  secgroup             = module.secgroup.bastion_sg_id
+  security_network_id  = module.network.security_net_id
+  zone1_network_id     = module.network.zone1_net_id
+  bastion1_external_ip = var.bastion_zone1_ip
+  bastion1_internal_ip = var.zone1_fixed_ip
+  floating_pool_name   = "public"
 }
+
 
 module "zone1" {
   source    = "./modules/app/zone1"

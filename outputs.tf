@@ -42,3 +42,23 @@ output "waf_ip" {
   description = "WAF 고정 IP"
   value       = var.waf_fixed_ip
 }
+
+output "bastion1_instance_id" {
+  description = "Bastion1 인스턴스 ID"
+  value       = module.bastion1.bastion_instance_id
+}
+
+output "bastion1_floating_ip" {
+  description = "Bastion1 Floating IP 주소"
+  value       = module.bastion1.bastion_floating_ip
+}
+
+output "bastion1_internal_ip" {
+  description = "Bastion1의 zone1-net 내부 IP"
+  value       = module.bastion1.bastion_internal_ip
+}
+
+output "bastion1_external_ip" {
+  description = "Bastion1의 security-net 외부 IP"
+  value       = module.bastion1.bastion_external_ip
+}
