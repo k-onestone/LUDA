@@ -5,7 +5,7 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh-authorized-keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD...LUDA_KEY_HERE...
+      - ${ssh_public_key}
 
 package_update: true
 package_upgrade: true
@@ -13,117 +13,105 @@ packages:
   - docker.io
   - docker-compose
 
+write_files:
+  - path: /opt/elk/docker-compose.yml
+    content: |
+      version: '3.7'
+      services:
+        elasticsearch:
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+          environment:
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+          ulimits:
+            memlock:
+              soft: -1
+              hard: -1
+          volumes:
+            - esdata:/usr/share/elasticsearch/data
+          ports:
+            - "9200:9200"
+        logstash:
+          image: docker.elastic.co/logstash/logstash:7.17.0
+          volumes:
+            - ./logstash/pipeline:/usr/share/logstash/pipeline
+          ports:
+            - "5044:5044"
+        fastapi:
+          image: tiangolo/uvicorn-gunicorn-fastapi:python3.9
+          volumes:
+            - ./fastapi:/app
+          ports:
+            - "8000:8000"
+        react:
+          image: node:14
+          working_dir: /app
+          command: sh -c "npm install && npm start"
+          volumes:
+            - ./react:/app
+          ports:
+            - "3000:3000"
+        nginx:
+          image: nginx:alpine
+          volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+          ports:
+            - "80:80"
+            - "443:443"
+      volumes:
+        esdata:
+
+  - path: /opt/elk/logstash/pipeline/logstash.conf
+    content: |
+      input {
+        beats {
+          port => 5044
+        }
+      }
+      output {
+        elasticsearch {
+          hosts => ["http://localhost:9200"]
+          index => "filebeat-%{+YYYY.MM.dd}"
+        }
+      }
+
+  - path: /opt/elk/fastapi/main.py
+    content: |
+      from fastapi import FastAPI
+      app = FastAPI()
+
+      @app.get("/")
+      def read_root():
+          return {"message": "FastAPI running"}
+
+  - path: /opt/elk/react/package.json
+    content: |
+      {
+        "name": "dashboard",
+        "version": "1.0.0",
+        "dependencies": {
+          "react": "^17.0.2",
+          "react-dom": "^17.0.2"
+        },
+        "scripts": {
+          "start": "npx serve -s ."
+        }
+      }
+
+  - path: /opt/elk/nginx/default.conf
+    content: |
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://react:3000;
+        }
+        location /api {
+          proxy_pass http://fastapi:8000;
+        }
+      }
+
 runcmd:
   - systemctl enable docker
   - systemctl start docker
-  - mkdir -p /opt/elk
-  - tee /opt/elk/docker-compose.yml > /dev/null <<EOF
-version: '3.7'
-
-services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
-    environment:
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:7.17.0
-    volumes:
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
-    ports:
-      - "5044:5044"
-
-  fastapi:
-    image: tiangolo/uvicorn-gunicorn-fastapi:python3.9
-    volumes:
-      - ./fastapi:/app
-    ports:
-      - "8000:8000"
-
-  react:
-    image: node:14
-    working_dir: /app
-    command: sh -c "npm install && npm start"
-    volumes:
-      - ./react:/app
-    ports:
-      - "3000:3000"
-
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "80:80"
-      - "443:443"
-
-volumes:
-  esdata:
-EOF
-
-  - mkdir -p /opt/elk/logstash/pipeline
-  - tee /opt/elk/logstash/pipeline/logstash.conf > /dev/null <<EOF
-input {
-  beats {
-    port => 5044
-  }
-}
-
-output {
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "filebeat-%{+YYYY.MM.dd}"
-  }
-}
-EOF
-
-  - mkdir -p /opt/elk/fastapi
-  - tee /opt/elk/fastapi/main.py > /dev/null <<EOF
-from fastapi import FastAPI
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "FastAPI running"}
-EOF
-
-  - mkdir -p /opt/elk/react
-  - tee /opt/elk/react/package.json > /dev/null <<EOF
-{
-  "name": "dashboard",
-  "version": "1.0.0",
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "scripts": {
-    "start": "npx serve -s ."
-  }
-}
-EOF
-
-  - mkdir -p /opt/elk/nginx
-  - tee /opt/elk/nginx/default.conf > /dev/null <<EOF
-server {
-    listen 80;
-    location / {
-        proxy_pass http://react:3000;
-    }
-
-    location /api {
-        proxy_pass http://fastapi:8000;
-    }
-}
-EOF
-
-  - cd /opt/elk && docker-compose up -d
+  - docker-compose -f /opt/elk/docker-compose.yml up -d

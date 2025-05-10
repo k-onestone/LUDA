@@ -1,6 +1,3 @@
-# terraform/modules/cloud-init/ids.yaml
-# IDS 인스턴스용 Cloud-Init 설정 스크립트
-
 # 1. 사용자 계정 생성
 users:
   - name: admin

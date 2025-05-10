@@ -6,7 +6,7 @@ terraform {
   }
 }
 
-# ✅ 외부 public 네트워크는 기존 리소스를 data로 참조
+# 외부 public 네트워크는 기존 리소스를 data로 참조
 data "openstack_networking_network_v2" "public" {
   name = "public"
 }

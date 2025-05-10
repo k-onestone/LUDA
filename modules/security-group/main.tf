@@ -125,9 +125,8 @@ resource "openstack_networking_secgroup_rule_v2" "elk_allow_egress" {
   security_group_id = openstack_networking_secgroup_v2.elk_sg.id
 }
 
-# -------------------------
 # IDS / IPS / WAF 보안 그룹 (기본 허용)
-# -------------------------
+
 resource "openstack_networking_secgroup_v2" "ids_sg" {
   name        = "ids-secgroup"
   description = "IDS 장비용 보안 그룹"

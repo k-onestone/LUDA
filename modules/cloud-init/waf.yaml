@@ -5,31 +5,29 @@ users:
     shell: /bin/bash
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh-authorized-keys:
-      - ${file("/opt/stack/.ssh/id_rsa.pub")}  # 또는 ${var.public_key_path}
+      - ${file("/opt/stack/.ssh/id_rsa.pub")}
 
 packages:
   - apache2
   - libapache2-mod-security2
   - filebeat
 
+write_files:
+  - path: /etc/filebeat/filebeat.yml
+    content: |
+      filebeat.inputs:
+        - type: log
+          enabled: true
+          paths:
+            - /var/log/apache2/modsec_audit.log
+
+      output.logstash:
+        hosts: ["10.10.10.200:5044"]
+
 runcmd:
-  # modSecurity 설정
   - a2enmod security2
   - cp /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
   - sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' /etc/modsecurity/modsecurity.conf
   - systemctl restart apache2
-
-  # Filebeat 설정 파일 덮어쓰기
-  - bash -c 'cat > /etc/filebeat/filebeat.yml <<EOF
-filebeat.inputs:
-- type: log
-  enabled: true
-  paths:
-    - /var/log/apache2/modsec_audit.log
-
-output.logstash:
-  hosts: ["10.10.10.200:5044"]
-EOF'
-
   - systemctl enable filebeat
   - systemctl start filebeat

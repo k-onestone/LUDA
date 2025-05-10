@@ -64,8 +64,8 @@ module "bastion1" {
   secgroup             = module.secgroup.bastion_sg_id
   security_network_id  = module.network.security_net_id
   zone1_network_id     = module.network.zone1_net_id
-  bastion_security_ip  = var.bastion_security_ip   # 10.10.10.200
-  bastion_zone1_ip     = var.bastion_zone1_ip      # 10.0.0.200
+  bastion_security_ip  = var.bastion_security_ip   
+  bastion_zone1_ip     = var.bastion_zone1_ip      
   floating_pool_name   = var.floating_network_name
 }
 
@@ -87,7 +87,7 @@ module "elk" {
   source                = "./modules/elk"
   providers             = { openstack = openstack }
   image_name            = var.image_name
-  flavor_name           = var.flavor_name_large
+  flavor_name           = var.flavor_name_medium
   key_pair              = var.key_pair
   secgroup              = module.secgroup.elk_sg_id
   shared_network_id     = module.network.shared_network_id
@@ -100,7 +100,7 @@ module "ids" {
   source        = "./modules/ids"
   providers     = { openstack = openstack }
   image_name    = var.image_name
-  flavor_name   = var.flavor_name_medium
+  flavor_name   = var.flavor_name_small
   key_pair      = var.key_pair
   secgroup      = module.secgroup.ids_sg_id
   network_id    = module.network.security_net_id
