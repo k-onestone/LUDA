@@ -64,8 +64,8 @@ module "bastion1" {
   secgroup             = module.secgroup.bastion_sg_id
   security_network_id  = module.network.security_net_id
   zone1_network_id     = module.network.zone1_net_id
-  bastion1_external_ip = var.bastion_zone1_ip
-  bastion1_internal_ip = var.zone1_fixed_ip
+  bastion_zone1_ip = var.bastion_zone1_ip
+  zone1_fixed_ip   = var.zone1_fixed_ip
   floating_pool_name   = var.floating_network_name
 }
 
