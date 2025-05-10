@@ -27,6 +27,8 @@ resource "openstack_compute_instance_v2" "vpn" {
     uuid        = var.shared_network_id
     fixed_ip_v4 = var.vpn_fixed_ip_shared
   }
+  
+ user_data = file("${path.module}/../cloud-init/vpn.yaml")
 }
 
 resource "openstack_networking_floatingip_v2" "vpn_fip" {

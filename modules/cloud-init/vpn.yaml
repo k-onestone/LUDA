@@ -1,0 +1,37 @@
+#cloud-config
+users:
+  - name: admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${file("/opt/stack/.ssh/id_rsa.pub")}
+
+package_update: true
+packages:
+  - strongswan
+  - iptables-persistent
+
+write_files:
+  - path: /etc/ipsec.conf
+    content: |
+      config setup
+        uniqueids=never
+      conn luda-vpn
+        keyexchange=ikev2
+        auto=add
+        left=%any
+        leftid=@vpn.example.com
+        leftsubnet=0.0.0.0/0
+        leftfirewall=yes
+        right=%any
+        rightsourceip=10.20.0.0/24
+        rightauth=eap-mschapv2
+        eap_identity=%identity
+
+  - path: /etc/ipsec.secrets
+    content: |
+      : PSK "luda-elk"
+
+runcmd:
+  - systemctl enable strongswan
+  - systemctl restart strongswan

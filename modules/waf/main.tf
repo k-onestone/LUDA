@@ -22,4 +22,6 @@ resource "openstack_compute_instance_v2" "waf" {
   uuid = var.zone1_network_id
 }
 
+user_data = file("${path.module}/../cloud-init/waf.yaml")
+
 }

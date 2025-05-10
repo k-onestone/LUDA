@@ -17,4 +17,6 @@ resource "openstack_compute_instance_v2" "ips" {
     uuid        = var.security_network_id
     fixed_ip_v4 = var.ips_fixed_ip
   }
+
+  user_data = file("${path.module}/../cloud-init/ips.yaml")
 }

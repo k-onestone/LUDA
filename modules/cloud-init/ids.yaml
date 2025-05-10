@@ -14,6 +14,8 @@ users:
 packages:
   - snort
   - filebeat
+  - curl
+  - net-tools
 
 # 3. Filebeat 설정 (Logstash로 전송)
 write_files:
@@ -25,7 +27,7 @@ write_files:
           paths:
             - /var/log/snort/snort.alert.fast
       output.logstash:
-        hosts: ["192.168.233.200:5044"]
+        hosts: ["10.10.10.200:5044"]
     owner: root:root
     permissions: '0644'
 

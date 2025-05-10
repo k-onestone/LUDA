@@ -22,4 +22,5 @@ resource "openstack_compute_instance_v2" "elk" {
     uuid        = var.security_network_id
     fixed_ip_v4 = var.elk_fixed_ip_security
   }
+ user_data = file("${path.module}/../cloud-init/elk.yaml")
 }
