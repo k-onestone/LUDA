@@ -1,0 +1,35 @@
+# terraform/modules/cloud-init/ids.yaml
+# IDS 인스턴스용 Cloud-Init 설정 스크립트
+
+# 1. 사용자 계정 생성
+users:
+  - name: admin
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - ${file("/opt/stack/.ssh/id_rsa.pub")}
+
+# 2. 패키지 설치
+packages:
+  - snort
+  - filebeat
+
+# 3. Filebeat 설정 (Logstash로 전송)
+write_files:
+  - path: /etc/filebeat/filebeat.yml
+    content: |
+      filebeat.inputs:
+        - type: log
+          enabled: true
+          paths:
+            - /var/log/snort/snort.alert.fast
+      output.logstash:
+        hosts: ["192.168.233.200:5044"]
+    owner: root:root
+    permissions: '0644'
+
+# 4. Snort 설정 (기본 설정 사용 가능)
+runcmd:
+  - systemctl enable filebeat
+  - systemctl start filebeat
