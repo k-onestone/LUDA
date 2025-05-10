@@ -64,10 +64,11 @@ module "bastion1" {
   secgroup             = module.secgroup.bastion_sg_id
   security_network_id  = module.network.security_net_id
   zone1_network_id     = module.network.zone1_net_id
-  bastion_zone1_ip = var.bastion_zone1_ip
-  zone1_fixed_ip   = var.zone1_fixed_ip
+  bastion_security_ip  = var.bastion_security_ip   # 10.10.10.200
+  bastion_zone1_ip     = var.bastion_zone1_ip      # 10.0.0.200
   floating_pool_name   = var.floating_network_name
 }
+
 
 module "zone1" {
   source            = "./modules/app/zone1"

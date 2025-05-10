@@ -4,52 +4,45 @@ variable "name" {
 }
 
 variable "image_name" {
-  description = "이미지 이름"
-  type        = string
+  type = string
 }
 
 variable "flavor_name" {
-  description = "Flavor 이름"
-  type        = string
+  type = string
 }
 
 variable "key_pair" {
-  description = "SSH Keypair 이름"
-  type        = string
+  type = string
 }
 
 variable "secgroup" {
-  description = "보안 그룹 ID"
-  type        = string
+  type = string
 }
 
 variable "security_network_id" {
-  description = "security-net 네트워크 ID"
-  type        = string
+  type = string
 }
 
 variable "zone1_network_id" {
-  description = "zone1-net 네트워크 ID"
+  type = string
+}
+
+variable "bastion_security_ip" {
+  description = "security-net 상 Bastion 고정 IP"
   type        = string
 }
 
 variable "bastion_zone1_ip" {
-  description = "security-net 상의 Bastion 고정 IP"
+  description = "zone1-net 상 Bastion 고정 IP"
   type        = string
-}
-
-variable "zone1_fixed_ip" {
-  description = "zone1-net 상의 Bastion 고정 IP"
-  type        = string
-}
-
-variable "public_key_path" {
-  description = "SSH 공개키 경로"
-  type        = string
-  default     = ""
 }
 
 variable "floating_pool_name" {
-  description = "Floating IP 풀 이름 (예: public)"
+  type = string
+}
+
+variable "public_key_path" {
+  description = "SSH 공개키 경로 (선택사항)"
   type        = string
+  default     = ""
 }
