@@ -164,3 +164,8 @@ variable "vpn_network_name" {
   description = "VPN 인스턴스가 연결될 네트워크 이름"
   default     = "vpn-net"
 }
+
+variable "bastion_security_ip" {
+  description = "Bastion 인스턴스의 security-net 고정 IP"
+  type        = string
+}
