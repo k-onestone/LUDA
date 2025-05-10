@@ -6,9 +6,9 @@ terraform {
   }
 }
 
-# -------------------------
+
 # Bastion 보안 그룹
-# -------------------------
+
 resource "openstack_networking_secgroup_v2" "bastion_sg" {
   name        = "bastion-secgroup"
   description = "Bastion 호스트용 보안 그룹"
@@ -24,9 +24,9 @@ resource "openstack_networking_secgroup_rule_v2" "bastion_allow_ssh" {
   security_group_id = openstack_networking_secgroup_v2.bastion_sg.id
 }
 
-# -------------------------
+
 # App (zone1) 보안 그룹
-# -------------------------
+
 resource "openstack_networking_secgroup_v2" "app_sg" {
   name        = "app-secgroup"
   description = "Zone1 애플리케이션 서버용 보안 그룹"
@@ -42,9 +42,9 @@ resource "openstack_networking_secgroup_rule_v2" "app_allow_http" {
   security_group_id = openstack_networking_secgroup_v2.app_sg.id
 }
 
-# -------------------------
+
 # VPN 서버 보안 그룹
-# -------------------------
+
 resource "openstack_networking_secgroup_v2" "vpn_secgroup" {
   name        = "vpn-secgroup"
   description = "VPN 서버용 보안 그룹"
@@ -80,9 +80,7 @@ resource "openstack_networking_secgroup_rule_v2" "vpn_allow_ssh" {
   security_group_id = openstack_networking_secgroup_v2.vpn_secgroup.id
 }
 
-# -------------------------
 # ELK 서버 보안 그룹
-# -------------------------
 resource "openstack_networking_secgroup_v2" "elk_sg" {
   name        = "elk-secgroup"
   description = "Security group for ELK server"
