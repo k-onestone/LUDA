@@ -43,8 +43,8 @@ variable "floating_pool_name" {
   type        = string
 }
 
-variable "vpn_network_id" {
-  description = "VPN 전용 네트워크 ID"
+variable "vpn_network_name" {
+  description = "VPN 인스턴스가 연결될 네트워크 이름"
   type        = string
 }
 

@@ -29,7 +29,7 @@ module "network" {
   zone1_subnet_cidr      = var.zone1_subnet_cidr
   shared_subnet_cidr     = var.shared_subnet_cidr
   security_subnet_cidr   = var.security_subnet_cidr
-  vpn_subnet_cidr = var.vpn_subnet_cidr
+  vpn_subnet_cidr        = var.vpn_subnet_cidr
 }
 
 module "secgroup" {
@@ -38,25 +38,24 @@ module "secgroup" {
 }
 
 module "vpn" {
-  source    = "./modules/vpn"
-  providers = { openstack = openstack }
-
+  source                = "./modules/vpn"
+  providers             = { openstack = openstack }
   image_name            = var.image_name
   flavor_name           = var.flavor_name_small
   key_pair              = var.key_pair
   secgroup              = module.secgroup.vpn_secgroup_id
   security_network_id   = module.network.security_net_id
   shared_network_id     = module.network.shared_network_id
-  vpn_network_id        = module.network.vpn_net_id
+  vpn_network_name      = var.vpn_network_name
   vpn_fixed_ip_vpn      = var.vpn_fixed_ip_vpn
   vpn_fixed_ip_security = var.vpn_fixed_ip_security
   vpn_fixed_ip_shared   = var.vpn_fixed_ip_shared
-  floating_pool_name    = "public"
+  floating_pool_name    = var.floating_network_name
 }
 
 module "bastion1" {
-  source    = "./modules/bastion1"
-  providers = { openstack = openstack }
+  source               = "./modules/bastion1"
+  providers            = { openstack = openstack }
   name                 = "bastion1"
   image_name           = var.image_name
   flavor_name          = var.flavor_name_small
@@ -67,28 +66,25 @@ module "bastion1" {
   zone1_network_id     = module.network.zone1_net_id
   bastion1_external_ip = var.bastion_zone1_ip
   bastion1_internal_ip = var.zone1_fixed_ip
-  floating_pool_name   = "public"
+  floating_pool_name   = var.floating_network_name
 }
 
-
 module "zone1" {
-  source    = "./modules/app/zone1"
-  providers = { openstack = openstack }
-
-  name            = "zone1"
-  image_name      = var.image_name
-  flavor_name     = var.flavor_name_small
-  key_pair        = var.key_pair
-  public_key_path = var.public_key_path
-  secgroup        = module.secgroup.app_sg_id
-  network_id      = module.network.zone1_net_id
-  zone1_fixed_ip  = var.zone1_fixed_ip
+  source            = "./modules/app/zone1"
+  providers         = { openstack = openstack }
+  name              = "zone1"
+  image_name        = var.image_name
+  flavor_name       = var.flavor_name_small
+  key_pair          = var.key_pair
+  public_key_path   = var.public_key_path
+  secgroup          = module.secgroup.app_sg_id
+  network_id        = module.network.zone1_net_id
+  zone1_fixed_ip    = var.zone1_fixed_ip
 }
 
 module "elk" {
-  source    = "./modules/elk"
-  providers = { openstack = openstack }
-
+  source                = "./modules/elk"
+  providers             = { openstack = openstack }
   image_name            = var.image_name
   flavor_name           = var.flavor_name_large
   key_pair              = var.key_pair
@@ -100,21 +96,19 @@ module "elk" {
 }
 
 module "ids" {
-  source    = "./modules/ids"
-  providers = { openstack = openstack }
-
-  image_name   = var.image_name
-  flavor_name  = var.flavor_name_medium
-  key_pair     = var.key_pair
-  secgroup     = module.secgroup.ids_sg_id
-  network_id   = module.network.security_net_id
-  ids_fixed_ip = var.ids_fixed_ip
+  source        = "./modules/ids"
+  providers     = { openstack = openstack }
+  image_name    = var.image_name
+  flavor_name   = var.flavor_name_medium
+  key_pair      = var.key_pair
+  secgroup      = module.secgroup.ids_sg_id
+  network_id    = module.network.security_net_id
+  ids_fixed_ip  = var.ids_fixed_ip
 }
 
 module "ips" {
-  source    = "./modules/ips"
-  providers = { openstack = openstack }
-
+  source              = "./modules/ips"
+  providers           = { openstack = openstack }
   image_name          = var.image_name
   flavor_name         = var.flavor_name_small
   key_pair            = var.key_pair
@@ -124,9 +118,8 @@ module "ips" {
 }
 
 module "waf" {
-  source    = "./modules/waf"
-  providers = { openstack = openstack }
-
+  source              = "./modules/waf"
+  providers           = { openstack = openstack }
   image_name          = var.image_name
   flavor_name         = var.flavor_name_small
   key_pair            = var.key_pair

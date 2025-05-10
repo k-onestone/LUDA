@@ -17,6 +17,6 @@ resource "openstack_compute_instance_v2" "ids" {
 
   network {
     uuid        = var.network_id
-    fixed_ip_v4 = var.ids_fixed_ip  # ✅ 수정됨
+    fixed_ip_v4 = var.ids_fixed_ip
   }
 }

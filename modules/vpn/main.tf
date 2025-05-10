@@ -6,6 +6,11 @@ terraform {
   }
 }
 
+# VPN 네트워크 이름으로 ID 조회
+data "openstack_networking_network_v2" "vpn_net" {
+  name = var.vpn_network_name
+}
+
 resource "openstack_compute_instance_v2" "vpn" {
   name            = "vpn"
   image_name      = var.image_name
@@ -14,7 +19,7 @@ resource "openstack_compute_instance_v2" "vpn" {
   security_groups = [var.secgroup]
 
   network {
-    uuid        = var.vpn_network_id
+    uuid = data.openstack_networking_network_v2.vpn_net.id
     fixed_ip_v4 = var.vpn_fixed_ip_vpn
   }
 

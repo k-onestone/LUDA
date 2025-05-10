@@ -49,6 +49,7 @@ variable "key_pair" {
 variable "public_key_path" {
   type        = string
   description = "SSH 공개키 파일 경로"
+  default     = ""
 }
 
 variable "flavor_name_small" {
@@ -149,16 +150,22 @@ variable "waf_fixed_ip" {
 }
 
 variable "vpn_network_id" {
-  description = "VPN 인스턴스가 연결될 전용 네트워크 ID (vpn-net)"
   type        = string
+  description = "VPN 인스턴스가 연결될 전용 네트워크 ID (vpn-net)"
 }
 
 variable "vpn_fixed_ip_vpn" {
-  description = "VPN 인스턴스의 vpn-net 인터페이스 고정 IP"
   type        = string
+  description = "VPN 인스턴스의 vpn-net 인터페이스 고정 IP"
 }
 
 variable "vpn_subnet_cidr" {
-  description = "VPN 전용 네트워크의 CIDR"
   type        = string
+  description = "VPN 전용 네트워크의 CIDR"
+}
+
+variable "vpn_network_name" {
+  type        = string
+  description = "VPN 인스턴스가 연결될 네트워크 이름"
+  default     = "vpn-net"
 }

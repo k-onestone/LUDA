@@ -1,5 +1,5 @@
 output "bastion1_ip" {
-  description = "Bastion1의 고정 IP"
+  description = "Bastion1의 고정 IP (security-net)"
   value       = var.bastion_zone1_ip
 }
 
@@ -55,10 +55,10 @@ output "bastion1_floating_ip" {
 
 output "bastion1_internal_ip" {
   description = "Bastion1의 zone1-net 내부 IP"
-  value       = module.bastion1.bastion_internal_ip
+  value       = var.zone1_fixed_ip
 }
 
 output "bastion1_external_ip" {
   description = "Bastion1의 security-net 외부 IP"
-  value       = module.bastion1.bastion_external_ip
+  value       = var.bastion_zone1_ip
 }

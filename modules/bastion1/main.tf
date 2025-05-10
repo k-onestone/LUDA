@@ -21,18 +21,18 @@ resource "openstack_compute_instance_v2" "bastion" {
 
   network {
     uuid        = var.security_network_id
-    fixed_ip_v4 = var.bastion1_external_ip
+    fixed_ip_v4 = var.bastion_zone1_ip
   }
 
   network {
     uuid        = var.zone1_network_id
-    fixed_ip_v4 = var.bastion1_internal_ip
+    fixed_ip_v4 = var.zone1_fixed_ip
   }
 }
 
 # ✅ Floating IP 발급
 resource "openstack_networking_floatingip_v2" "bastion_fip" {
-  pool = data.openstack_networking_network_v2.public.name
+  pool = data.openstack_networking_network_v2.public.id
 }
 
 # ✅ Floating IP → bastion 인스턴스 연결
