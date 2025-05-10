@@ -43,6 +43,12 @@ variable "zone1_fixed_ip" {
   type        = string
 }
 
+variable "public_key_path" {
+  description = "SSH 공개키 경로"
+  type        = string
+  default     = ""
+}
+
 variable "floating_pool_name" {
   description = "Floating IP 풀 이름 (예: public)"
   type        = string

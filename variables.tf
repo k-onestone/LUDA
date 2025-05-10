@@ -149,11 +149,6 @@ variable "waf_fixed_ip" {
   type        = string
 }
 
-variable "vpn_network_id" {
-  type        = string
-  description = "VPN 인스턴스가 연결될 전용 네트워크 ID (vpn-net)"
-}
-
 variable "vpn_fixed_ip_vpn" {
   type        = string
   description = "VPN 인스턴스의 vpn-net 인터페이스 고정 IP"
